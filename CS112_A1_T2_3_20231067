@@ -1,0 +1,93 @@
+# File : CS112_A1_T2_3_20231067.py
+# Purpose : Subtract a square. This is a two-player mathematical game of strategy. It is played by two
+# people with a pile of coins (or other tokens) between them. The players take turns removing
+# coins from the pile wether it is a choice from the player or a random generator number betweem (10, 1000), always removing a
+# non-zero square number of coins (1, 4, 9, 16, ...).
+# The player who removes the last coin wins.
+# Author : Rawda Raafat Ramadan 
+# ID : 20231067
+
+# import the random library to  make the computer chooses a random number for the players to play with
+# import the math library to calculate the square root of the coins that hte players choose and make sure it is a square number
+# import the cycle library to alternate between the two players
+import random
+import math
+from itertools import cycle
+def square_root(player_coins):# make a function that make sure that the input is a a square number
+    num = math.sqrt(player_coins)
+    if  num.is_integer():
+        return True
+    else:
+        return False
+
+# make a function to the Game itself
+def subtract_a_square(total_number_of_coins):
+    Players = ["player1", "player2"]
+    # make a list for the players
+    current_player = cycle(Players)
+    #use the cycle library to alternate between the player
+
+    while total_number_of_coins > 0: #make a while loop to the game itself and it will break if the player chooses
+        current_player_name = next(current_player)
+        #put the next function in the loop itself to make sure that every round it alternate between player 1 one and player 2
+        invalid_answer = False
+        # Flag to indicate if the player's answer is invalid
+
+        while True: # ensures that the current player enters a valid square number of coins before proceeding to the next turn
+            if invalid_answer is True :
+                player_coins = int(input(f"Invalid input, {current_player_name}. Please enter a square number of coins: "))
+                # if the number is invalid this make sure that the same player gets anthor chance
+            else:
+                player_coins = int(input(f"Enter a square number of coins for {current_player_name}: "))
+                # if the number is valid the game will continue to the next player
+
+            if player_coins <= 0 or not square_root(player_coins) or player_coins > total_number_of_coins:
+                invalid_answer = True
+                continue
+            else:
+                invalid_answer = False
+                total_number_of_coins -= player_coins
+                #if the input number is valid this will subtract it from the total number of coins
+                print(f"{current_player_name}, the remaining coins from the pile is {total_number_of_coins}")
+                # this indicates how many coins left in the pile
+                break
+
+    if total_number_of_coins <= 0:
+        print(f"Congratulations {current_player_name}, you've won the game!!")
+        # this tells who Won the game at the end
+
+
+while True: # a loop that includes the menu that will appear to the user # keep the game going unless the players decide to exit
+    Choice1 = input("""Welcome to The Game Subtract a Square Number.The rules are easy 
+     I. This Game is between two players 
+     II. there is a pile of coins (you can choose wether you choose the number of coins in this pile or make the computer chooses for you!)
+     III. the players can choose only a square every round 
+     IV. every player have only one round
+     V. who take tha last coin in the pile Win!
+     Do you want to Play !
+    1. Start  
+    2. Exit """)
+    if Choice1 == "2" or Choice1 == "exit":
+        #allows the user to exit the game
+        print("Exiting The Game. Goodbye!!")
+        break
+    elif Choice1 == "1" or Choice1 == "start":
+        #allows the user to start a new game of Subtract a Square
+        Choice2 = input("""Do You Want to a random number of piles or do you want it to generated randomly 
+        1. generate a random number
+        2. chose a number 
+        """)
+        if Choice2 == "1" or Choice2 == "generate a random number":
+            total_number_of_coins = random.randint(1, 1000) # make the computer chooses a random number for the players to play with
+            print("Total number of coins:", total_number_of_coins) # make sure that the players knows the total number of coins that the computer chooses
+            subtract_a_square(total_number_of_coins) #using the fuction(the Game)
+        elif Choice2 == "2" or Choice2 == "chose a number":
+            total_number_of_coins = int(input("What is the number you would like to Choose? ")) # this when the player decide the total number of coins
+            print("Total number of coins:", total_number_of_coins)
+            subtract_a_square(total_number_of_coins) #using the fuction(The Game)
+        else:
+            print("Invalid choice. please try again")
+            continue
+    else:
+        print("Invalid choice. please try again")
+        continue
